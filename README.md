@@ -3,7 +3,13 @@
 ## Создание бота telegram с хранением в redis  
 - [ ] развертывание redis в docker
 - [ ] развертывания min go bot telegram
+- [ ] profit
 
+
+## [Bot](http://t.me/testgoredis_bot)
+
+### Description
+Тестовый бот для выдачи информации о курсах валют
 ## Packages
 Use [Go Modules](https://blog.golang.org/using-go-modules)
 
