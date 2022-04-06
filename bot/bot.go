@@ -37,34 +37,30 @@ func Run() (*tb.Bot, error) {
 		log.Printf("DEBUG: user %v request bot", user.Username)
 		bot.Delete(m)
 
+		var d getpair.CUR
+		err = d.GetCur()
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		selectorLocale := &tb.ReplyMarkup{}
-		RuBtn := selectorLocale.Data("€ EUR", "eur_btn", "ru")
-		EnBtn := selectorLocale.Data("$ USD", "usd_btn", "en")
-		selectorLocale.Inline(selectorLocale.Row(RuBtn, EnBtn))
+		EurBtn := selectorLocale.Data("€ EUR", "eur_btn", "ru")
+		UsdBtn := selectorLocale.Data("$ USD", "usd_btn", "en")
+		selectorLocale.Inline(selectorLocale.Row(EurBtn, UsdBtn))
 		bot.Send(user, "Выбор валюты", selectorLocale)
-		bot.Handle(&RuBtn, func(c *tb.Callback) {
+		bot.Handle(&EurBtn, func(c *tb.Callback) {
 			user := m.Sender
 			bot.Delete(c.Message)
-			bot.Send(user, "Цену пока не знаю")
+			bot.Send(user, fmt.Sprintf("%0.2f", d.Rates.Rub))
 			bot.Respond(c)
 		})
-		bot.Handle(&EnBtn, func(c *tb.Callback) {
+		bot.Handle(&UsdBtn, func(c *tb.Callback) {
 			user := m.Sender
 			bot.Delete(c.Message)
-			bot.Send(user, "Цену пока не знаю")
+			bot.Send(user, fmt.Sprintf("%0.2f", d.Rates.Rub/d.Rates.Usd))
 			bot.Respond(c)
 		})
 	})
-
-	var d getpair.CUR
-	err = d.GetCur()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	// EUR/RUB
-	log.Println(d.Rates.Rub)
-	// USD/RUB
-	log.Println(d.Rates.Rub / d.Rates.Usd)
 
 	return bot, err
 }
