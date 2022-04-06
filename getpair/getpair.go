@@ -1,40 +1,46 @@
 package getpair
 
 import (
-	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"log"
-	"os"
-
-	"github.com/peterhellberg/fixer"
+	"net/http"
 )
 
-func GetCur() {
-	ftkn, err := ioutil.ReadFile(".secret/fixer")
-	if err != nil {
-		log.Printf("unable to read fixer token: %v", err)
-	}
-
-	fixer.AccessKey(string(ftkn))
-
-	resp, err := fixer.Latest(context.Background(),
-		fixer.Base(fixer.RUB),
-		fixer.Symbols(
-			fixer.USD,
-			fixer.EUR,
-		),
-	)
-	if err != nil {
-		return
-	}
-
-	encode(resp)
+// Структура значений валютных пар
+type CUR struct {
+	Success   bool   `json:"success"`
+	Timestamp int    `json:"timestamp"`
+	Base      string `json:"base"`
+	Date      string `json:"date"`
+	Rates     struct {
+		Rub float64 `json:"RUB"`
+		Usd float64 `json:"USD"`
+	} `json:"rates"`
 }
 
-func encode(v interface{}) {
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetEscapeHTML(false)
-	enc.SetIndent("", " ")
-	enc.Encode(v)
+// Получение значений валютных пар
+func (data *CUR) GetCur() (err error) {
+	token, err := ioutil.ReadFile(".secret/fixer")
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("http://data.fixer.io/api/latest?access_key=%v&base=EUR&symbols=RUB,USD", string(token))
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return err
+	}
+
+	json.Unmarshal(body, &data)
+
+	return nil
 }

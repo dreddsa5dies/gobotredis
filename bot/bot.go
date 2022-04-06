@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/dreddsa5dies/gobotredis/getpair"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -54,6 +55,16 @@ func Run() (*tb.Bot, error) {
 			bot.Respond(c)
 		})
 	})
+
+	var d getpair.CUR
+	err = d.GetCur()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	// EUR/RUB
+	log.Println(d.Rates.Rub)
+	// USD/RUB
+	log.Println(d.Rates.Rub / d.Rates.Usd)
 
 	return bot, err
 }
