@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/dreddsa5dies/gobotredis/getpair"
+	"github.com/dreddsa5dies/gobotredis/storage"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -22,7 +22,6 @@ func Run() (*tb.Bot, error) {
 		Poller:    &tb.LongPoller{Timeout: 2 * time.Second},
 		ParseMode: tb.ModeHTML,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -37,10 +36,11 @@ func Run() (*tb.Bot, error) {
 		log.Printf("DEBUG: user %v request bot", user.Username)
 		bot.Delete(m)
 
-		var d getpair.CUR
-		err = d.GetCur()
+		currentTime := time.Now()
+		key := currentTime.Format("09-07-2017")
+		d, err := storage.GetData(key)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 		}
 
 		selectorLocale := &tb.ReplyMarkup{}

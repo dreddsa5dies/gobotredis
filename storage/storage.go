@@ -2,9 +2,23 @@ package storage
 
 import (
 	"context"
+	"encoding/json"
 
+	"github.com/dreddsa5dies/gobotredis/getpair"
 	"github.com/go-redis/redis/v8"
 )
+
+// Структура значений валютных пар
+type CUR struct {
+	Success   bool   `json:"success"`
+	Timestamp int    `json:"timestamp"`
+	Base      string `json:"base"`
+	Date      string `json:"date"`
+	Rates     struct {
+		Rub float64 `json:"RUB"`
+		Usd float64 `json:"USD"`
+	} `json:"rates"`
+}
 
 // Подключение к базе данных
 func RedisDatabase(db int) (*redis.Client, error) {
@@ -21,4 +35,43 @@ func RedisDatabase(db int) (*redis.Client, error) {
 	}
 
 	return client, nil
+}
+
+// Запись данных в базу
+func SetData(data []byte, key string) (err error) {
+	client, err := RedisDatabase(0)
+	if err != nil {
+		return err
+	}
+
+	d, err := getpair.GetCur()
+	if err != nil {
+		return err
+	}
+
+	err = client.Set(context.TODO(), key, d, 0).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Получение данных по ключу (текущий день)
+func GetData(key string) (data *CUR, err error) {
+	client, err := RedisDatabase(0)
+	if err != nil {
+		return nil, err
+	}
+
+	val, err := client.Get(context.TODO(), key).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	var d *CUR
+
+	json.Unmarshal([]byte(val), d)
+
+	return d, nil
 }
