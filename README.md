@@ -10,8 +10,27 @@
 
 ### Description
 Тестовый бот для выдачи информации о курсах валют
+
 ## Packages
 Use [Go Modules](https://blog.golang.org/using-go-modules)
+
+```bash
+docker pull redis
+```
+
+## Start
+
+<details>
+  <summary>Start redis docker image & application</summary>
+
+```bash
+    docker run --name redis-test-instance -p 6379:6379 -d redis
+    docker ps
+    cd ../cmd
+    go run main.go
+  ```
+
+</details>
 
 ## The code contains comments in Russian
 
