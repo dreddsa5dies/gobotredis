@@ -1,17 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"time"
 
+	"github.com/go-redis/redis/v8"
+
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
-	log.Println("Starting... ok!")
-
 	var bot *tb.Bot
 	var err error
 
@@ -20,13 +21,15 @@ func main() {
 		if err != nil {
 			log.Println("Cannot creat and run bot", err)
 		} else {
-			log.Println("Bot started")
+			log.Println("Bot started!")
 			break
 		}
 	}
+
 	bot.Start()
 }
 
+// запуск бота
 func runBot() (*tb.Bot, error) {
 	secret, err := ioutil.ReadFile(".secret/token")
 	if err != nil {
@@ -43,4 +46,21 @@ func runBot() (*tb.Bot, error) {
 	}
 
 	return bot, err
+}
+
+// Подключение к базе данных
+func RedisDatabase(db int) (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       db,
+	})
+
+	status := client.Ping(context.TODO())
+
+	if status.Err() != nil {
+		return nil, status.Err()
+	}
+
+	return client, nil
 }
