@@ -1,5 +1,9 @@
 package storage
 
+import (
+	""
+)
+
 // Подключение к базе данных
 func RedisDatabase(db int) (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
