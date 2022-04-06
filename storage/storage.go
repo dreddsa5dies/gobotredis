@@ -1,7 +1,9 @@
 package storage
 
 import (
-	""
+	"context"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // Подключение к базе данных

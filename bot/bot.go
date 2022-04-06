@@ -33,6 +33,7 @@ func Run() (*tb.Bot, error) {
 	bot.Handle("/start", func(m *tb.Message) {
 		bot.UnpinAll(m.Chat)
 		user := m.Sender
+		log.Printf("DEBUG: user %v request bot", user.Username)
 		bot.Delete(m)
 
 		selectorLocale := &tb.ReplyMarkup{}
@@ -42,14 +43,12 @@ func Run() (*tb.Bot, error) {
 		bot.Send(user, "Выбор валюты", selectorLocale)
 		bot.Handle(&RuBtn, func(c *tb.Callback) {
 			user := m.Sender
-			log.Printf("DEBUG: user %v request RUB/EUR", user.Username)
 			bot.Delete(c.Message)
 			bot.Send(user, "Цену пока не знаю")
 			bot.Respond(c)
 		})
 		bot.Handle(&EnBtn, func(c *tb.Callback) {
 			user := m.Sender
-			log.Printf("DEBUG: user %v request RUB/USD", user.Username)
 			bot.Delete(c.Message)
 			bot.Send(user, "Цену пока не знаю")
 			bot.Respond(c)
