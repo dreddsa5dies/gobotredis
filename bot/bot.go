@@ -38,10 +38,12 @@ func Run() (*tb.Bot, error) {
 
 		currentTime := time.Now()
 		key := currentTime.Format("09-07-2017")
+		log.Printf("[*] key: %s", key)
 		d, err := storage.GetData(key)
 		if err != nil {
-			log.Println(err)
+			log.Printf("[!] don't read data: %e", err)
 		}
+		log.Printf("[*] rub: %v", d.Rates.Rub)
 
 		selectorLocale := &tb.ReplyMarkup{}
 		EurBtn := selectorLocale.Data("€ EUR", "eur_btn", "ru")

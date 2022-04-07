@@ -22,6 +22,10 @@ type CUR struct {
 	} `json:"rates"`
 }
 
+func NewCUR() *CUR {
+	return &CUR{}
+}
+
 // Подключение к базе данных
 func RedisDatabase(db int) (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
@@ -48,12 +52,8 @@ func SetData(data []byte, key string) (err error) {
 		return err
 	}
 
-	d, err := getpair.GetCur()
-	if err != nil {
-		return err
-	}
-
-	err = client.Set(context.TODO(), key, d, 0).Err()
+	log.Printf("[*] setdata key: %s", key)
+	err = client.Set(context.TODO(), key, data, 0).Err()
 	if err != nil {
 		return err
 	}
@@ -70,12 +70,13 @@ func GetData(key string) (data *CUR, err error) {
 		return nil, err
 	}
 
+	log.Printf("[*] getdata key: %s", key)
 	val, err := client.Get(context.TODO(), key).Result()
 	if err != nil {
 		return nil, err
 	}
 
-	var d *CUR
+	d := NewCUR()
 
 	json.Unmarshal([]byte(val), d)
 
@@ -89,11 +90,13 @@ func UpdatePair() {
 	for {
 		currentTime := time.Now()
 		key := currentTime.Format("09-07-2017")
+		log.Printf("[*] update key: %s", key)
 
 		pair, err := getpair.GetCur()
 		if err != nil {
 			log.Println(err)
 		}
+
 		err = SetData(pair, key)
 		if err != nil {
 			log.Println(err)
