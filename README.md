@@ -2,7 +2,7 @@
 
 ## Создание бота telegram с хранением в redis  
 - [ ] развертывание redis в docker
-- [ ] развертывания min go bot telegram
+- [*] развертывания min go bot telegram
 - [ ] profit
 
 
@@ -10,6 +10,8 @@
 
 ### Description
 Тестовый бот для выдачи информации о курсах валют
+
+Бот регистрируется на [@BotFather](https://t.me/botfather)
 
 ## Packages
 Use [Go Modules](https://blog.golang.org/using-go-modules)
@@ -20,8 +22,22 @@ docker pull redis
 
 ## Start
 
-<details>
-  <summary>Start redis docker image & application</summary>
+### Токены
+Сохраняются в папку ./secret/ проекта в виде файлов формата:
+- ./secret/token
+
+Токен telegram для активации бота
+- ./secret/fixer
+
+Ключ API [fixer](https://fixer.io/usage)
+
+Все токены записаны обычной одной строкой.
+
+### ВАЖНО!
+
+Указать папку .secret/ в .gitignore
+
+### Старт проекта
 
 ```bash
     docker run --name redis-test-instance -p 6379:6379 -d redis
@@ -29,9 +45,6 @@ docker pull redis
     cd ../cmd
     go run main.go
   ```
-
-</details>
-
 ## The code contains comments in Russian
 
 ## License
