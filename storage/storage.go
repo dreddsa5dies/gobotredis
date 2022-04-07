@@ -52,7 +52,6 @@ func SetData(data []byte, key string) (err error) {
 		return err
 	}
 
-	log.Printf("[*] setdata key: %s", key)
 	err = client.Set(context.TODO(), key, data, 0).Err()
 	if err != nil {
 		return err
@@ -70,7 +69,6 @@ func GetData(key string) (data *CUR, err error) {
 		return nil, err
 	}
 
-	log.Printf("[*] getdata key: %s", key)
 	val, err := client.Get(context.TODO(), key).Result()
 	if err != nil {
 		return nil, err
@@ -80,7 +78,7 @@ func GetData(key string) (data *CUR, err error) {
 
 	json.Unmarshal([]byte(val), d)
 
-	log.Println("[*] get data form redis successfully")
+	log.Println("[*] get data from redis successfully")
 
 	return d, nil
 }
@@ -90,7 +88,6 @@ func UpdatePair() {
 	for {
 		currentTime := time.Now()
 		key := currentTime.Format("09-07-2017")
-		log.Printf("[*] update key: %s", key)
 
 		pair, err := getpair.GetCur()
 		if err != nil {

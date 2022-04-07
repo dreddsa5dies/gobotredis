@@ -1,9 +1,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/dreddsa5dies/gobotredis)](https://goreportcard.com/report/github.com/dreddsa5dies/gobotredis) ![License](https://img.shields.io/badge/License-MIT-blue.svg)  
 
 ## Создание бота telegram с хранением в redis  
-- [ ] развертывание redis в docker
+- [*] развертывание redis в docker
 - [*] развертывания min go bot telegram
-- [ ] profit
+- [*] profit
 
 
 ## [Bot](http://t.me/testgoredis_bot)

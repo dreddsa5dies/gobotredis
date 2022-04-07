@@ -33,17 +33,15 @@ func Run() (*tb.Bot, error) {
 	bot.Handle("/start", func(m *tb.Message) {
 		bot.UnpinAll(m.Chat)
 		user := m.Sender
-		log.Printf("DEBUG: user %s request bot", user.Username)
+		log.Printf("[*] user.%v request bot", user.ID)
 		bot.Delete(m)
 
 		currentTime := time.Now()
 		key := currentTime.Format("09-07-2017")
-		log.Printf("[*] key: %s", key)
 		d, err := storage.GetData(key)
 		if err != nil {
 			log.Printf("[!] don't read data: %e", err)
 		}
-		log.Printf("[*] rub: %v", d.Rates.Rub)
 
 		selectorLocale := &tb.ReplyMarkup{}
 		EurBtn := selectorLocale.Data("€ EUR", "eur_btn", "ru")
