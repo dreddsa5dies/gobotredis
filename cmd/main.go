@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/dreddsa5dies/gobotredis/bot"
-	"github.com/dreddsa5dies/gobotredis/getpair"
+	"github.com/dreddsa5dies/gobotredis/storage"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -12,12 +12,12 @@ func main() {
 	var b *tb.Bot
 	var err error
 
-	go getpair.UpdatePair()
+	go storage.UpdatePair()
 
 	for {
 		b, err = bot.Run()
 		if err != nil {
-			log.Println("Cannot creat and run bot", err)
+			log.Println("[!] Cannot creat and run bot", err)
 		} else {
 			log.Println("Bot started!")
 			break

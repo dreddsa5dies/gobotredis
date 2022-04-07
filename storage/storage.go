@@ -3,6 +3,8 @@ package storage
 import (
 	"context"
 	"encoding/json"
+	"log"
+	"time"
 
 	"github.com/dreddsa5dies/gobotredis/getpair"
 	"github.com/go-redis/redis/v8"
@@ -34,6 +36,8 @@ func RedisDatabase(db int) (*redis.Client, error) {
 		return nil, status.Err()
 	}
 
+	log.Println("[*] redis connect successfully")
+
 	return client, nil
 }
 
@@ -54,6 +58,8 @@ func SetData(data []byte, key string) (err error) {
 		return err
 	}
 
+	log.Println("[*] set data to redis successfully")
+
 	return nil
 }
 
@@ -73,5 +79,28 @@ func GetData(key string) (data *CUR, err error) {
 
 	json.Unmarshal([]byte(val), d)
 
+	log.Println("[*] get data form redis successfully")
+
 	return d, nil
+}
+
+// Сохранение значений валютных пар и их обновление 2 раза в день
+func UpdatePair() {
+	for {
+		currentTime := time.Now()
+		key := currentTime.Format("09-07-2017")
+
+		pair, err := getpair.GetCur()
+		if err != nil {
+			log.Println(err)
+		}
+		err = SetData(pair, key)
+		if err != nil {
+			log.Println(err)
+		}
+
+		log.Println("[*] pair update successfully")
+
+		time.Sleep(12 * time.Hour)
+	}
 }

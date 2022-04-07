@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/peterhellberg/fixer v0.0.0-20200418093135-041235e093a1
 	gopkg.in/tucnak/telebot.v2 v2.5.0
 )
 
@@ -15,3 +14,7 @@ require (
 )
 
 replace bot => ../bot
+
+replace getrair => ../getrair
+
+replace storage => ../storage

@@ -5,9 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
-
-	"github.com/dreddsa5dies/gobotredis/storage"
 )
 
 // Получение значений валютных пар
@@ -31,23 +28,7 @@ func GetCur() (data []byte, err error) {
 		return nil, err
 	}
 
+	log.Println("[*] pair get successfully")
+
 	return body, nil
-}
-
-// Сохранение значений валютных пар и их обновление 2 раза в день
-func UpdatePair() {
-	for {
-		currentTime := time.Now()
-		key := currentTime.Format("09-07-2017")
-
-		pair, err := GetCur()
-		if err != nil {
-			log.Println(err)
-		}
-		err = storage.SetData(pair, key)
-		if err != nil {
-			log.Println(err)
-		}
-		time.Sleep(12 * time.Hour)
-	}
 }
